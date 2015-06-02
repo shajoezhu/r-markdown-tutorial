@@ -62,13 +62,15 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
   <script src="reveal.js/lib/js/html5shiv.js"></script>
   <![endif]-->
   <script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
-  <style>
+  <style type="text/css">
   
   .reveal h1 { font-size: 2.5em; } 
   
   .reveal .slides { text-align: left; }
   
   .reveal .slides figure { text-align: center; }
+  
+  .reveal figcaption { display: none; }
   
   </style>
 </head>
@@ -82,18 +84,25 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
     <h3 class="date">June 2, 2015</h3>
 </section>
 
-<section><section id="markdown" class="titleslide slide level1"><h1>Markdown</h1></section><section id="just-write" class="slide level2">
-<h1>Just write</h1>
-<p><strong>Goal:</strong> don't even <em>think</em> about the layout, just the content.</p>
+<section><section id="markdown" class="titleslide slide level1"><h1>Markdown</h1></section><section id="goal" class="slide level2">
+<h1>Goal:</h1>
+<p>Communicate your thoughts to your collaborators and your future self,</p>
+<div class="fragment">
+<p>combining text, math, documented code,</p>
+</div>
+<div class="fragment">
+<p>and <strong>no fuss</strong>.</p>
+</div>
 </section><section class="slide level2">
 
-<p><strong>Solutions:</strong></p>
+<p>No fussing about layout:</p>
 <ul>
 <li>unformatted text</li>
 <li><a href="http://commonmark.org/">markdown</a></li>
 <li><a href="http://latex-project.org/intro.html">LaTeX</a></li>
 </ul>
-<p>Markdown aims to be readable as-is, but <em>also</em> have methods to produce beautiful output.</p>
+<p>Markdown aims to be readable as-is,<br />
+but has methods to produce beautiful output.</p>
 <div class="fragment">
 <blockquote>
 <p>A Markdown-formatted document should be publishable as-is, as plain text, without looking like it's been marked up with tags or formatting instructions. -- <a href="http://daringfireball.net/projects/markdown/syntax#philosophy">John Gruber</a></p>
@@ -136,8 +145,8 @@ But, it's nice to have different (semantic) levels of spaces.
 Inline markup
 -------------
 
-**Paragraphs** begin and end with empty lines,
-and are *not* indented.
+**Paragraphs** begin and end 
+with empty lines, and are *not* indented.
 
 - **bold** and *emphasis*
 - ~~strikeout~~
@@ -241,7 +250,7 @@ and can be <span class="ot">[internal](#links-and-images)</span>.</code></pre></
 <ol start="0" type="1">
 <li>Make a directory for this workshop.</li>
 <li>Open a text editor.</li>
-<li>Write something.</li>
+<li>Write some text.</li>
 <li>Save it as <code>notes.md</code>.</li>
 </ol>
 </section><section class="slide level2">
@@ -276,10 +285,6 @@ and can be <span class="ot">[internal](#links-and-images)</span>.</code></pre></
 <li>but indentations do (<em>by at least four spaces</em>)</li>
 </ol>
 <div class="fragment">
-<p>To separate two numbered lists, add a non-indented, invisible element, like an html comment:</p>
-<div class="sourceCode"><pre class="sourceCode html"><code class="sourceCode html"><span class="co">&lt;!-- --&gt;</span></code></pre></div>
-</div>
-<div class="fragment">
 <p>For more info see <a href="http://pandoc.org/README.html#the-four-space-rule">the documentation</a>.</p>
 </div>
 </section><section id="metadata" class="slide level2">
@@ -298,10 +303,17 @@ delimited by <strong>exactly three</strong> dashes.</p>
 <p><em>For example</em>: add</p>
 <div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="fu">output_format :</span> pdf_document</code></pre></div>
 <p>and render with <code>rmarkdown::render(&quot;notes.md&quot;)</code>.</p>
+<div class="fragment">
+<p><strong>or even:</strong></p>
+<div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="fu">output_format :</span> word_document</code></pre></div>
+</div>
 </section><section id="under-the-hood" class="slide level2">
 <h1>Under the hood</h1>
 <p><a href="http://pandoc.org/README.html"><code>pandoc</code></a></p>
 <pre class="sh"><code>pandoc --help</code></pre>
+<figure>
+<img src="jgm.png" alt="jgm" /><figcaption>jgm</figcaption>
+</figure>
 <p>more notes in <a href="technical-notes.html">the appendix</a></p>
 </section></section>
 <section><section id="adding-in-r" class="titleslide slide level1"><h1>Adding in R</h1></section><section class="slide level2">
@@ -323,36 +335,48 @@ delimited by <strong>exactly three</strong> dashes.</p>
 </div>
 </section><section class="slide level2">
 
-<pre class="Rmd"><code> ```{r}
+<pre class="Rmd"><code>Look,
+$$ \lim_{n \to \infty} \sum_{k=0}^n \frac{ (-1)^n }{ 2n+1 } = \frac{\pi}{4} , $$
+see?
+
+ ```{r}
  cumsum( -4 * (-1)^(1:20) / (2*(1:20)-1) )
  ```</code></pre>
-<p><strong>produces</strong></p>
+<div class="fragment">
+<p>Look, <span class="math display">\[ \lim_{n \to \infty} \sum_{k=0}^n \frac{ (-1)^n }{ 2n+1 } = \frac{\pi}{4} , \]</span> see?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cumsum</span>( -<span class="dv">4</span> *<span class="st"> </span>(-<span class="dv">1</span>)^(<span class="dv">1</span>:<span class="dv">20</span>) /<span class="st"> </span>(<span class="dv">2</span>*(<span class="dv">1</span>:<span class="dv">20</span>)-<span class="dv">1</span>) )</code></pre></div>
 <pre><code>##  [1] 4.000000 2.666667 3.466667 2.895238 3.339683 2.976046 3.283738
 ##  [8] 3.017072 3.252366 3.041840 3.232316 3.058403 3.218403 3.070255
 ## [15] 3.208186 3.079153 3.200366 3.086080 3.194188 3.091624</code></pre>
+</div>
 </section><section class="slide level2">
 
 <pre class="Rmd"><code> ```{r}
  plot(cumsum( -4 * (-1)^(1:20) / (2*(1:20)-1) ))
  abline(h=pi, col=&#39;red&#39;)
  ```</code></pre>
-<p><strong>produces</strong></p>
+<div class="fragment">
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(<span class="kw">cumsum</span>( -<span class="dv">4</span> *<span class="st"> </span>(-<span class="dv">1</span>)^(<span class="dv">1</span>:<span class="dv">20</span>) /<span class="st"> </span>(<span class="dv">2</span>*(<span class="dv">1</span>:<span class="dv">20</span>)-<span class="dv">1</span>) ))
 <span class="kw">abline</span>(<span class="dt">h=</span>pi, <span class="dt">col=</span><span class="st">&#39;red&#39;</span>)</code></pre></div>
 <figure>
 <img src="figure/unnamed-chunk-2-1.png" alt="plot of chunk unnamed-chunk-2" /><figcaption>plot of chunk unnamed-chunk-2</figcaption>
 </figure>
-</section><section id="show-only-the-results" class="slide level2">
-<h1>Show only the results:</h1>
+</div>
+</section><section class="slide level2">
+
+<p><strong>Want to omit the ugly code?</strong></p>
 <pre class="Rmd"><code> ```{r, echo=FALSE}
  plot(cumsum( -4 * (-1)^(1:20) / (2*(1:20)-1) ))
  abline(h=pi, col=&#39;red&#39;)
  ```</code></pre>
-<p><strong>produces</strong></p>
+<div class="fragment">
 <figure>
 <img src="figure/unnamed-chunk-3-1.png" alt="plot of chunk unnamed-chunk-3" /><figcaption>plot of chunk unnamed-chunk-3</figcaption>
 </figure>
+</div>
+<div class="fragment">
+<p><strong>but:</strong> leave it in!</p>
+</div>
 </section><section id="whats-going-on" class="slide level2">
 <h1>What's going on</h1>
 <ol type="1">
@@ -423,10 +447,10 @@ delimited by <strong>exactly three</strong> dashes.</p>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: center;">83</td>
-<td style="text-align: center;">76</td>
-<td style="text-align: center;">64</td>
+<td style="text-align: center;">71</td>
+<td style="text-align: center;">70</td>
 <td style="text-align: center;">77</td>
+<td style="text-align: center;">82</td>
 </tr>
 </tbody>
 </table>
@@ -482,11 +506,9 @@ date: `r date()`
 </section></section>
 <section><section id="templated-reports" class="titleslide slide level1"><h1>Templated reports</h1></section><section class="slide level2">
 
-<p><strong>Do this</strong> to set up some fake data:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dir.create</span>(<span class="st">&quot;examples/thedata&quot;</span>)</code></pre></div>
-<pre><code>## Warning in dir.create(&quot;examples/thedata&quot;): &#39;examples/thedata&#39; already
-## exists</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">owd &lt;-<span class="st"> </span><span class="kw">setwd</span>(<span class="st">&quot;examples/thedata&quot;</span>)
+<p>Set up some fake data:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dir.create</span>(<span class="st">&quot;examples/thedata&quot;</span>)
+owd &lt;-<span class="st"> </span><span class="kw">setwd</span>(<span class="st">&quot;examples/thedata&quot;</span>)
 for (samp in LETTERS[<span class="dv">1</span>:<span class="dv">10</span>]) {
     xy &lt;-<span class="st"> </span><span class="kw">data.frame</span>( 
         <span class="dt">age=</span><span class="kw">exp</span>(<span class="kw">rnorm</span>(<span class="dv">50</span>)),
@@ -498,7 +520,7 @@ for (samp in LETTERS[<span class="dv">1</span>:<span class="dv">10</span>]) {
 <span class="kw">setwd</span>(owd)</code></pre></div>
 </section><section class="slide level2">
 
-<p>We now have 26 datasets,<br />
+<p>We now have 10 datasets,<br />
 and would like to <em>visualize</em> each, like:</p>
 <figure>
 <img src="figure/plot_one_data-1.png" alt="plot of chunk plot_one_data" /><figcaption>plot of chunk plot_one_data</figcaption>
@@ -555,6 +577,16 @@ for (input.file in file.names) {
 <li><a href="examples/thedata/I-data.viz.html">I-data.tsv</a></li>
 <li><a href="examples/thedata/J-data.viz.html">J-data.tsv</a></li>
 </ul>
+</section><section id="another-exercise" class="slide level2">
+<h1>Another exercise</h1>
+<p><strong>Goal:</strong> Compare different <span class="math inline">\(k\)</span> with <span class="math inline">\(k\)</span>-means on the <code>iris</code> dataset.</p>
+<ol type="1">
+<li>Make subdirectories, called <code>iris/k</code>, for <span class="math inline">\(1 \le k \le 5\)</span>.</li>
+<li><p>In each make a file called <code>config.js</code>, using e.g.</p>
+<div class="sourceCode"><pre class="sourceCode R"><code class="sourceCode r"><span class="kw">library</span>(jsonlite)
+<span class="kw">cat</span>(<span class="kw">toJSON</span>(<span class="kw">list</span>(<span class="dt">k=</span><span class="dv">3</span>)),<span class="dt">file=</span><span class="st">&quot;config.json&quot;</span>)</code></pre></div></li>
+<li><p>Make a template that reads <code>config.js</code> (with <code>fromJSON</code>) and then runs <code>kmeans</code> with the appropriate <code>k</code>.</p></li>
+</ol>
 </section></section>
 <section><section id="other-resources" class="titleslide slide level1"><h1>Other resources</h1></section><section class="slide level2">
 
@@ -562,7 +594,7 @@ for (input.file in file.names) {
 <li>my <a href="technical-notes.html">technical notes</a> I made while writing this up</li>
 <li><a href="http://kbroman.org/knitr_knutshell/pages/Rmarkdown.html">Karl Broman's</a> intro to Rmarkdown</li>
 <li>the extensive, excellent <a href="http://pandoc.org/README.html">documentation for pandoc</a></li>
-<li><a href="http://stackoverflow.com/">StackOverflow</a></li>
+<li><a href="http://stackoverflow.com/questions/tagged/rmarkdown">Stack</a><a href="http://stackoverflow.com/questions/tagged/knitr">Overflow</a></li>
 </ul>
 </section></section>
     </div>
@@ -582,7 +614,7 @@ for (input.file in file.names) {
         history: true,          // Push each slide change to the browser history
         center: true,                       // Vertical centering of slides
         maxScale: 1.5,                  // Bounds for smallest/largest possible content scale
-        slideNumber: false,                // Display the page number of the current slide
+        slideNumber: true,                // Display the page number of the current slide
         theme: 'simple', // available themes are in /css/theme
         transition: 'none', // default/cube/page/concave/zoom/linear/fade/none
 
