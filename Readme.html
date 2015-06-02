@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+</head>
+<body>
+<h1 id="a-quick-introduction-to-rmarkdown">A quick introduction to R/markdown</h1>
+<p>These are notes and materials for a short (2-hour) course on using R/markdown to generate reports and dynamic documents.</p>
+<h2 id="outline">Outline</h2>
+<ol style="list-style-type: decimal">
+<li><p>Markdown</p>
+<ul>
+<li>philosophy: just write</li>
+<li>structure: headers, breaks</li>
+<li>formatting: <strong>bold</strong>, <em>emphasis</em></li>
+<li><a href="Outline">links</a></li>
+<li>math</li>
+<li>code blocks</li>
+<li>images</li>
+<li><a href="https://github.com/jgm/pandoc/issues/851">metadata</a></li>
+<li>the <a href="http://en.wikipedia.org/wiki/Markdown">wider</a> <a href="http://blog.codinghorror.com/standard-flavored-markdown/">world</a> of <a href="http://commonmark.org/">markdown(s)</a></li>
+</ul></li>
+<li><p>Rendering markdown with <a href="http://pandoc.org">pandoc</a></p>
+<ul>
+<li>bare-bones</li>
+<li>adding style</li>
+<li>metadata/YAML headers</li>
+<li>self-contained documents (+local mathjax)</li>
+<li>gotchas</li>
+<li>the <a href="http://pandoc.org/README.html">documentation</a> and <a href="http://stackoverflow.com/questions/tagged/pandoc?sort=frequent&amp;pageSize=15">where to look for help</a></li>
+</ul></li>
+<li><p>Adding <a href="http://r-project.org/">R</a></p>
+<ul>
+<li>what <a href="http://yihui.name/knitr/">knitr</a> does</li>
+<li>code chunks</li>
+<li>figures</li>
+<li>tables</li>
+<li>chunk options</li>
+<li>inline <code>R</code></li>
+<li>rmarkdown and rstudio</li>
+</ul></li>
+<li><p>One report, many documents: a working example</p>
+<ul>
+<li>one subdirectory per dataset</li>
+<li>json configuration + simulated data</li>
+<li>external variables with knitr</li>
+<li>using <code>Rscript</code> instead</li>
+</ul></li>
+</ol>
+<h2 id="notes-on-setting-up-to-build-the-presentation">Notes on setting up to build the <em>presentation</em></h2>
+<p>There are various <a href="http://pandoc.org/README.html#producing-slide-shows-with-pandoc">styles of presentation</a> available.</p>
+<p>My favorite: perhaps slidy or reveal.js.</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>S5</strong> :</p>
+<pre class="sh"><code>mkdir s5 &amp;&amp; cd s5
+wget http://meyerweb.com/eric/tools/s5/v/1.1/s5-11.zip
+unzip s5-11.zip 
+ln -s ui/default default</code></pre></li>
+<li><p><strong>dzslides</strong> : No setup, but seems to be broken.</p></li>
+<li><p>slidy : No setup, downloads from [w3c.org]</p></li>
+<li><p>slideous : Doesn't seem to produce a slideshow?</p>
+<pre class="sh"><code>mkdir slideous
+cd slideous/
+wget http://goessner.net/download/prj/slideous/slideous.zip
+unzip slideous.zip </code></pre></li>
+<li><p>reveal.js : pandoc 1.12 works with reveal.js &lt;= 2.6.2</p>
+<pre class="sh"><code>git clone https://github.com/hakimel/reveal.js.git
+cd reveal.js
+git checkout 2.6.2
+cd ..</code></pre>
+<p>An up-to-date pandoc shouldn't need the checkout.</p>
+<p>Note: can change theme with e.g. <code>-V theme=moon</code></p></li>
+</ol>
+</body>
+</html>
