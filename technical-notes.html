@@ -5,7 +5,7 @@
   <meta http-equiv="Content-Style-Type" content="text/css" />
   <meta name="generator" content="pandoc" />
   <meta name="author" content="Peter Ralph" />
-  <title>Technical notes on pandoc, R+markdown, and friends</title>
+  <title>Technical notes</title>
   <style type="text/css">code{white-space: pre;}</style>
   <style type="text/css">
 div.sourceCode { overflow-x: auto; }
@@ -48,7 +48,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </head>
 <body>
 <div id="header">
-<h1 class="title">Technical notes on pandoc, R+markdown, and friends</h1>
+<h1 class="title">Technical notes</h1>
 <h2 class="author">Peter Ralph</h2>
 <h3 class="date">June 2, 2015</h3>
 </div>
@@ -78,12 +78,33 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul>
 <h2 id="other-notes-on-making-slides">Other notes on making slides</h2>
 <p>A paragraph with three dots:</p>
-<pre><code>
-. . .
-</code></pre>
+<pre><code>. . .</code></pre>
 <p>makes a pause.</p>
+<h2 id="other-styles-of-presentation">Other styles of presentation</h2>
+<p>There are various <a href="http://pandoc.org/README.html#producing-slide-shows-with-pandoc">styles of presentation</a> available.</p>
+<p>I ended up using <code>reveal.js</code>, so it's included as a submodule, but <code>slidy</code> looked pretty good, too. Here's notes on getting the prerequisites. There are rules in the Makefile to build the rest of these.</p>
+<ol style="list-style-type: decimal">
+<li><p>reveal.js : pandoc 1.12 works only with reveal.js &lt;= 2.6.2.</p>
+<p>So, if your pandoc is old, do this:</p>
+<pre class="sh"><code>cd reveal.js
+git checkout 2.6.2
+cd ..</code></pre></li>
+<li><p><strong>S5</strong> :</p>
+<pre class="sh"><code>mkdir s5 &amp;&amp; cd s5
+wget http://meyerweb.com/eric/tools/s5/v/1.1/s5-11.zip
+unzip s5-11.zip 
+ln -s ui/default default</code></pre></li>
+<li><p><strong>dzslides</strong> : No setup, but seems to be broken.</p></li>
+<li><p><strong>slidy</strong> : No setup, downloads from [w3c.org]</p></li>
+<li><p><strong>slideous</strong> : Doesn't seem to produce a slideshow?</p>
+<pre class="sh"><code>mkdir slideous
+cd slideous/
+wget http://goessner.net/download/prj/slideous/slideous.zip
+unzip slideous.zip </code></pre></li>
+</ol>
 <h1 id="knitr-and-such">knitr and such</h1>
 <h2 id="options-for-rendering-using-r">Options for rendering using R</h2>
+<p>There are methods in the Makefile for rendering with each of these methods.</p>
 <ul>
 <li><p><code>markdown::markdownToHTML( )</code> : lightweight but does some styling</p>
 <ul>
@@ -95,6 +116,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <ul>
 <li><code>pander</code> is an entire schema to translate <code>R</code> objects <em>to markdown</em></li>
 <li>imports a bunch of javascript and css</li>
+<li>gave many people strange errors in Rstudio</li>
 </ul></li>
 <li><p><code>rmarkdown::render( )</code> : high-level, does everything, has a nice template.</p>
 <ul>
@@ -119,12 +141,14 @@ knitr::all_patterns$md$chunk.end
 <pre class="make"><code>KNITR_PATTERNS = list( chunk.begin=&quot;^```+\\s*\\{[.]?(r[a-zA-Z]*.*)\\}\\s*$$&quot;, chunk.end=&quot;^```+\\s*$$&quot;, inline.code=&quot;`r +([^`]+)\\s*`&quot;)
 
 %.md : %.Rmd
-    cd $$(dirname $&lt;); Rscript -e &#39;knitr::knit_patterns[[&quot;set&quot;]]($(KNITR_PATTERNS)); knitr::knit(basename(&quot;$&lt;&quot;),output=basename(&quot;$@&quot;))&#39;
-</code></pre>
+    cd $$(dirname $&lt;); Rscript -e &#39;knitr::knit_patterns[[&quot;set&quot;]]($(KNITR_PATTERNS)); knitr::knit(basename(&quot;$&lt;&quot;),output=basename(&quot;$@&quot;))&#39;</code></pre>
 <h2 id="knitr-and-working-directories">Knitr and working directories</h2>
 <p>Yihui says that <code>setwd()</code> is <em>evil</em>, because it is not reproducible. <code>knit()</code> works from the directory the <code>.Rmd</code> file is in. You <em>can</em> change the directory <code>knitr</code> works in using</p>
 <div class="sourceCode"><pre class="sourceCode R"><code class="sourceCode r">opts_knit$<span class="kw">set</span>(<span class="dt">root.dir=</span>NEW.DIR)</code></pre></div>
-<p><em>Note:</em> some people try to call <code>setwd()</code> within their <code>.Rmd</code> file. But, <code>knitr</code> resets this for each chunk!</p>
+<p>Since this is interpreted relative to the <em>working directory</em> of the R session that calls knitr, it may be best to always set</p>
+<div class="sourceCode"><pre class="sourceCode R"><code class="sourceCode r">opts_knit$<span class="kw">set</span>(<span class="dt">root.dir=</span><span class="st">&quot;.&quot;</span>)</code></pre></div>
+<p>in templates. (But, beware of any dependencies!)</p>
+<p><em>Note:</em> some people try to call <code>setwd()</code> within their <code>.Rmd</code> file. But, <code>knitr</code> resets this for each chunk (and, chastizes you!).</p>
 <h2 id="knitr-and-for-loops">knitr and for loops</h2>
 <p>If <code>knitr</code> doesn't always make plots/output every time around the for loop, the problem might be there's an error or something early on?</p>
 <h2 id="tables">Tables</h2>
@@ -134,7 +158,6 @@ knitr::all_patterns$md$chunk.end
  dtab &lt;- xtable( table( sample( letters, 300, replace=TRUE ) ) )
  print(dtab,type=&#39;html&#39;)
  ```</code></pre>
-<p><code>{r results=&quot;asis&quot;} library(xtable) dtab &lt;- xtable( table( sample( letters, 300, replace=TRUE ) ) ) print(dtab,type='html')</code></p>
 <h1 id="formatting-and-layout">Formatting and layout</h1>
 <h2 id="customization">Customization</h2>
 <p>Options:</p>
@@ -144,7 +167,7 @@ knitr::all_patterns$md$chunk.end
 </ul>
 <h2 id="about-math-rendering">About math rendering</h2>
 <p>There are <a href="http://pandoc.org/README.html#math">many options</a>, but probably <code>--mathjax</code> is the best?</p>
-<p>Note that it is supposed to render as far as possible with unicode, but this m<span class="math inline">\(\alpha\)</span>y depend on the proper fonts being installed?</p>
+<p>Note that it is supposed to render as far as possible with unicode, but this m<span class="math inline">\(a\)</span>y depend on the proper fonts being installed?</p>
 <h2 id="other-types-of-text-line-blocks">Other types of text: line blocks</h2>
 <p>These are just markdown except it pays attention to linebreaks.</p>
 <pre><code>| Molecular &amp; Computational Biology
