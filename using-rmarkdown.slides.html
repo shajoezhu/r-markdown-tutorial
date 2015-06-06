@@ -61,7 +61,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
   <!--[if lt IE 9]>
   <script src="reveal.js/lib/js/html5shiv.js"></script>
   <![endif]-->
-  <script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
   <style type="text/css">
   
   .reveal h1 { font-size: 2.5em; } 
@@ -420,8 +420,8 @@ see?
  ```</code></pre>
 </section><section id="tables" class="slide level2">
 <h1>Tables</h1>
-<p>One option: use <code>pander</code> + <code>results=&quot;asis&quot;</code>.</p>
-<pre class="Rmd"><code> ```{r results=&quot;asis&quot;}
+<p>One option: use <code>pander</code>.</p>
+<pre class="Rmd"><code> ```{r}
  library(pander)
  bases &lt;- table( sample( c(&quot;A&quot;,&quot;C&quot;,&quot;G&quot;,&quot;T&quot;), 300, replace=TRUE ) )
  pander(t(bases))
@@ -447,10 +447,10 @@ see?
 </thead>
 <tbody>
 <tr class="odd">
+<td style="text-align: center;">71</td>
+<td style="text-align: center;">72</td>
 <td style="text-align: center;">73</td>
-<td style="text-align: center;">77</td>
-<td style="text-align: center;">85</td>
-<td style="text-align: center;">65</td>
+<td style="text-align: center;">84</td>
 </tr>
 </tbody>
 </table>
@@ -495,7 +495,8 @@ date: `r date()`
 </ul></li>
 <li><p>Make a table of the number of observations for each species.</p>
 <ul>
-<li><code>results=&quot;asis&quot;</code> and <code>pander()</code></li>
+<li><code>pander()</code></li>
+<li>or <code>results=&quot;asis&quot;</code> and <code>print.xtable(xtable(),type='html')</code></li>
 </ul></li>
 <li><p>Plot the flower dimensions against each other,</p>
 <ul>
@@ -555,8 +556,9 @@ file.names &lt;-<span class="st"> </span><span class="kw">list.files</span>(<spa
 for (input.file in file.names) {
     output.file &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;.tsv$&quot;</span>,<span class="st">&quot;.viz.html&quot;</span>,input.file)
     <span class="kw">knit2html</span>(<span class="st">&quot;../simple-template.Rmd&quot;</span>, <span class="dt">output=</span>output.file, <span class="dt">quiet=</span><span class="ot">TRUE</span>)
-}
-<span class="kw">setwd</span>(owd)</code></pre></div>
+}</code></pre></div>
+<pre><code>## Error in parse_block(g[-1], g[1], params.src): duplicate label &#39;setup&#39;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">setwd</span>(owd)</code></pre></div>
 </section><section class="slide level2">
 
 <p><strong>Look at them:</strong></p>

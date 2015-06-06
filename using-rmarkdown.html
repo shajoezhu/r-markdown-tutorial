@@ -1,0 +1,766 @@
+---
+title: "Narrowing the brain-publication barrier with R+markdown"
+author: "Peter Ralph"
+date: June 2, 2015
+---
+
+
+
+Markdown
+========
+
+
+Goal:
+-----
+
+
+Communicate your thoughts to your collaborators and your future self,
+
+
+. . .
+
+combining text, math, documented code,
+
+. . .
+
+and **no fuss**.
+
+
+
+----------------------
+
+No fussing about layout:
+
+ - unformatted text 
+ - [markdown](http://commonmark.org/)
+ - [LaTeX](http://latex-project.org/intro.html)
+
+Markdown aims to be readable as-is, \
+but has methods to produce beautiful output. 
+
+. . .
+
+> A Markdown-formatted document should be publishable as-is, as plain text, without looking like it's been marked up with tags or formatting instructions. -- [John Gruber](http://daringfireball.net/projects/markdown/syntax#philosophy)
+
+
+
+No, really, don't think about the layout
+----------------------------------------
+
+Don't even *think* about the layout,
+just the content.
+
+> [...] it is better to leave document design to document designers, and to let authors get on with writing documents -- [intro to LaTeX](http://latex-project.org/intro.html)
+
+
+
+-----------------------------------------
+
+Today's goal:
+
+1. Learn a few simple rules
+2. and get going producing content.
+
+
+
+
+
+Structuring text
+----------------
+
+1.  Separate things with empty lines.
+2.  Wrap lines whenever you feel like it.
+
+![your laptop?](Erika_9_typewriter.jpg)
+
+<!--
+On a typewriter,
+carriage return
+always does the same thing.
+
+But, it's nice to have different (semantic) levels of spaces.
+-->
+
+
+
+
+Source
+---------------
+
+````{.markdown}
+Text formatting
+===============
+
+Inline markup
+-------------
+
+**Paragraphs** begin and end 
+with empty lines, and are *not* indented.
+
+- **bold** and *emphasis*
+- ~~strikeout~~
+- super^scripts^ and sub~scripts~
+- and `inline_code($fixed.width)`
+
+````
+
+Result
+----------------
+
+### Text formatting
+
+
+#### Inline markup
+
+
+**Paragraphs** begin and end with empty lines,
+and are *not* indented.
+
+- **bold** and *emphasis*
+- ~~strikeout~~
+- super^scripts^ and sub~scripts~
+- and `inline_code($fixed.width)`
+
+
+Source
+----------------
+
+````{.markdown}
+Lists must be preceded by an empty line,
+
+1.  ordered or unordered.
+2.  Indenting subsequent content
+    
+    -  will continue the list
+
+        *   and nest
+        *   other lists.
+
+3.  *Indenting* means one tab, or four spaces.
+
+After using markdown for a bit, 
+go read [pandoc's documentation](http://pandoc.org/README.html).
+````
+
+
+---------------
+
+Lists must be preceded by an empty line,
+
+1.  ordered or unordered.
+2.  Indenting subsequent content
+    
+    -  will continue the list
+
+        *  and nest
+        *  other lists.
+
+3.  *Indenting* means one tab, or four spaces.
+
+After using markdown for a bit, 
+go read [pandoc's documentation](http://pandoc.org/README.html).
+
+
+
+Math
+----
+
+```
+Math goes between `$`, single ($\pi$), or double: 
+$$ \frac{\pi}{4} = \sum_{n=0}^\infty \frac{(-1)^n}{2k+1} .$$
+```
+Math goes between `$`, single ($\pi$), or double: 
+$$\frac{\pi}{4} = \sum_{n=0}^\infty \frac{(-1)^n}{2k+1} .$$
+
+
+------------------
+
+Even math environments *inside* double dollar signs:
+```{.md}
+$$
+\begin{align}
+    x &= (a+b)^2 - (a-b)^2 \\
+      &= 4ab
+\end{align}
+$$
+```
+\begin{align}
+    x &= (a+b)^2 - (a-b)^2 \\
+      &= 4ab
+\end{align}
+
+
+
+Code blocks
+-----------
+
+    ```{.r}
+    msg <- "Hello, world."
+    print(msg)
+    ```
+
+**produces**
+
+```{.R}
+msg <- "Hello, world."
+print(msg)
+```
+
+Blockquotes
+-----------
+
+    > I also dream about a modern replacement for LaTeX 
+    > designed from the ground up to target multiple output formats 
+    > (at least PDF, HTML, EPUB). -- [John MacFarlane](http://john.macfarlane.usesthis.com/)
+
+**produces**
+
+> I also dream about a modern replacement for LaTeX 
+> designed from the ground up to target multiple output formats 
+> (at least PDF, HTML, EPUB). -- [John MacFarlane](http://john.macfarlane.usesthis.com/)
+
+
+Links and Images
+------------------
+
+[Links](http://www.w3.org/) just go in parentheses, 
+and can be [internal](#links-and-images).
+
+```{.markdown}
+[Links](http://www.w3.org/) just go in parentheses, 
+and can be [internal](#links-and-images).
+```
+
+----------------------
+
+Images are **the same** but with a `!` in front. \
+(You can't specify image size in the markdown, [yet](https://github.com/jgm/pandoc/issues/261#issuecomment-101078069).)
+
+```{.markdown}
+![oh, internet](cat-pandoc.jpg)
+```
+
+![oh, internet](cat-pandoc.jpg)
+
+
+
+
+Rendering markdown with [pandoc](http://pandoc.org)
+==================================================
+
+Get started!
+------------
+
+0.  Make a directory for this workshop.
+1.  Open a text editor.
+2.  Write some text.
+3.  Save it as `notes.md`.
+
+-------------
+
+To compile, either:
+
+ *  Open `R`, run
+
+    ```{.r}
+    library(knitr)
+    knit2html("notes.md")
+    ```
+
+    and open `notes.html` in your web browser.
+
+ *  **or** click on *knit* in `Rstudio`
+
+
+Wait, but the layout?
+---------------------
+
+Remember,
+
+> [...] it is better to leave document design to document designers, and to let authors get on with writing documents.
+
+. . .
+
+If you **must**, then:
+
+- tweak the css
+- modify a [rmarkdown format](http://rmarkdown.rstudio.com/developer_custom_formats.html)
+- or a [pandoc template](http://pandoc.org/README.html#templates)
+
+
+
+Gotchas
+-------
+
+
+1.  many things need to begin with an empty line
+1.  carriage returns don't (usually) mean anything
+1.  but indentations do (*by at least four spaces*)
+
+
+. . .
+
+
+For more info see [the documentation](http://pandoc.org/README.html#the-four-space-rule).
+
+
+
+Metadata
+--------
+
+At the top of your document, add 
+```{.yaml}
+---
+title: YOUR TITLE HERE
+author: YOUR NAME HERE
+date: June 2, 2015
+---
+```
+
+... the [YAML](http://yaml.org/) metadata, \
+delimited by **exactly three** dashes.
+
+
+-----------------
+
+**Note:** Besides setting the title,
+you can control the **output** in
+[many](http://tex.stackexchange.com/questions/139139/adding-headers-and-footers-using-pandoc/139205#139205) 
+[ways](http://rmarkdown.rstudio.com/html_document_format.html#pandoc-arguments) 
+here.
+
+*For example*: add
+
+```{.yaml}
+output_format : pdf_document
+```
+
+and render with `rmarkdown::render("notes.md")`.
+
+. . .
+
+**or even:**
+
+
+```{.yaml}
+output_format : word_document
+```
+
+
+
+Under the hood
+--------------
+
+[`pandoc`](http://pandoc.org/README.html)
+
+```{.sh}
+pandoc --help
+```
+
+![jgm](jgm.png)
+
+
+more notes in [the appendix](technical-notes.html)
+
+
+
+Adding in R
+===========
+
+
+-----------
+
+**Goal:**
+add R code to the document,
+*along with its output*.
+
+. . .
+
+![knitr](knitr-screenshot.png)
+
+
+Go ahead
+--------
+
+Just add a *chunk* of R code, wrapped in
+
+`````{.Rmd}
+ ```{r}
+ # PUT ARBITRARY R CODE HERE
+ ```
+`````
+
+. . .
+
+**Try it!**
+
+----------
+
+`````{.Rmd}
+Look,
+$$ \lim_{n \to \infty} \sum_{k=0}^n \frac{ (-1)^n }{ 2n+1 } = \frac{\pi}{4} , $$
+see?
+
+ ```{r}
+ cumsum( -4 * (-1)^(1:20) / (2*(1:20)-1) )
+ ```
+`````
+
+. . .
+
+Look,
+$$ \lim_{n \to \infty} \sum_{k=0}^n \frac{ (-1)^n }{ 2n+1 } = \frac{\pi}{4} , $$
+see?
+
+
+
+```r
+cumsum( -4 * (-1)^(1:20) / (2*(1:20)-1) )
+```
+
+```
+##  [1] 4.000000 2.666667 3.466667 2.895238 3.339683 2.976046 3.283738
+##  [8] 3.017072 3.252366 3.041840 3.232316 3.058403 3.218403 3.070255
+## [15] 3.208186 3.079153 3.200366 3.086080 3.194188 3.091624
+```
+
+--------
+
+`````{.Rmd}
+ ```{r}
+ plot(cumsum( -4 * (-1)^(1:20) / (2*(1:20)-1) ))
+ abline(h=pi, col='red')
+ ```
+`````
+
+. . .
+
+
+
+```r
+plot(cumsum( -4 * (-1)^(1:20) / (2*(1:20)-1) ))
+abline(h=pi, col='red')
+```
+
+![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2-1.png) 
+
+----------------------
+
+**Want to omit the ugly code?**
+
+`````{.Rmd}
+ ```{r, echo=FALSE}
+ plot(cumsum( -4 * (-1)^(1:20) / (2*(1:20)-1) ))
+ abline(h=pi, col='red')
+ ```
+`````
+
+. . .
+
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png) 
+
+. . .
+
+**but:** leave it in!
+
+
+What's going on
+---------------
+
+1.  `knitr` uses a *regular expression* to find code chunks
+
+    -  pulls these out, 
+    -  evaluates them one at a time
+    -  and inserts "the results" back in
+
+2.  `pandoc` renders the resulting markdown file
+
+    -   with various choices of styling
+
+
+Chunk options
+-------------
+
+Name each chunk,
+and set [options](http://yihui.name/knitr/options/)
+for [what gets printed](http://yihui.name/knitr/demo/output/)
+
+`````{.Rmd}
+ ```{r my_chunk_name, fig.height=4, echo=FALSE}
+`````
+
+
+`echo=(TRUE|FALSE)` 
+
+: include source code in the output?
+
+`results="(markup|asis)"` 
+
+: style the output or not?
+
+`include=(FALSE|TRUE)` 
+
+: include anything in the output?
+
+
+-------------
+
+Set document defaults up top:
+
+```````{.Rmd}
+ ```{r, include=FALSE}
+ fig.dim <- 5
+ library(knitr)
+ opts_chunk$set(
+        fig.height=fig.dim,
+        fig.width=2*fig.dim,
+        fig.align='center'
+    )
+ ```
+```````
+
+
+Tables
+------
+
+One option: use `pander`.
+
+```````{.Rmd}
+ ```{r}
+ library(pander)
+ bases <- table( sample( c("A","C","G","T"), 300, replace=TRUE ) )
+ pander(t(bases))
+ ```
+```````
+
+*note:* the transpose `t( )`
+
+
+```r
+ library(pander)
+ bases <- table( sample( c("A","C","G","T"), 300, replace=TRUE ) )
+ pander(t(bases))
+```
+
+
+---------------
+ A   C   G   T 
+--- --- --- ---
+65  67  73  95 
+---------------
+
+
+R everywhere
+------------
+
+`````{.Rmd}
+You can 
+`r paste(letters[c(9,14,19,5,18,20)],collapse='')` 
+code anywhere.
+`````
+
+You can 
+insert 
+code anywhere.
+
+
+--------------
+
+Even in the YAML header.
+
+Go change yours!
+
+    ---
+    title: My notes
+    author: Peter Ralph
+    date: `r date()`
+    ---
+
+
+Online example
+==============
+
+--------------
+
+**Question:** 
+How accurate is inference of the slope of a linear regression,
+as a function of the sample size?
+
+. . .
+
+Let's figure it out, by simulation.
+
+. . .
+
+Here is a [pre-written solution](linear-regression.html).
+
+
+Your turn
+---------
+
+Download the 
+[iris dataset](https://raw.githubusercontent.com/petrelharp/r-markdown-tutorial/master/examples/iris.tsv) 
+to a new directory.
+
+or just do
+
+````{.R}
+data(iris)
+write.table(iris,file="examples/iris.tsv",sep="\t")
+````
+
+----------
+
+1.  Read in the data.
+
+2.  Describe the dataset: number of observations, variables, etcetera.
+
+    - inline `R` code (`` `r nrow(data)` ``)
+
+3.  Make a table of the number of observations for each species.
+
+    * `pander()`
+    * or `results="asis"` and `print.xtable(xtable(),type='html')`
+
+4.  Plot the flower dimensions against each other,
+
+    * first using `pairs()`, then
+    * colored by species.
+
+
+
+Templated reports
+=================
+
+-----------------
+
+Set up some fake data:
+
+
+```r
+dir.create("examples/thedata")
+owd <- setwd("examples/thedata")
+for (samp in LETTERS[1:10]) {
+    xy <- data.frame( 
+        age=exp(rnorm(50)),
+        type=sample(letters[1:3],50,replace=TRUE)
+    )
+    xy$height <- 5 + runif(1)*xy$age + 3*runif(1)*as.numeric(xy$type) + rnorm(50)
+    write.table(xy,file=paste(samp,"-data.tsv",sep=''))
+}
+setwd(owd)
+```
+
+------------------
+
+We now have 10 datasets, \
+and would like to *visualize* each, 
+like:
+
+![plot of chunk plot_one_data](figure/plot_one_data-1.png) 
+
+
+---------------------
+
+**The template:** `examples/simple-template.Rmd`
+
+``````{.Rmd}
+ ---
+ title: Visualization for `r input.file`
+ date: `r date()`
+ ---
+
+ ```{r, echo=FALSE}
+ xy <- read.table(input.file)
+ ```
+
+ The file `r input.file` 
+ has `r nrow(xy)` observations:
+
+ ```{r}
+ plot( height ~ age, col=type, data=xy )
+ legend( "topleft", pch=1, col=1:nlevels(xy$type), 
+    col=1:nlevels(xy$type) )
+ ```
+``````
+
+-----------------------
+
+**Render it:**
+
+
+
+```r
+library(knitr)
+owd <- setwd("examples/thedata")  # determines where output will go
+opts_knit$set(root.dir=".")  # determines where code is evaluated
+file.names <- list.files(".",".*tsv")
+for (input.file in file.names) {
+    output.file <- gsub(".tsv$",".viz.html",input.file)
+    knit2html("../simple-template.Rmd", output=output.file, quiet=TRUE)
+}
+```
+
+```
+## Error in parse_block(g[-1], g[1], params.src): duplicate label 'setup'
+```
+
+```r
+setwd(owd)
+```
+
+
+-------------------------
+
+**Look at them:**
+
+`````{.Rmd}
+ ```{r make_links, results="asis"}
+ output.files <- file.path("examples/thedata",gsub(".tsv$",".viz.html",file.names))
+ links <- paste("[",file.names,"](",output.files,")",sep='')
+ cat( paste("- ", links, "\n"), "\n" )
+ ```
+`````
+
+-  [A-data.tsv](examples/thedata/A-data.viz.html) 
+ -  [B-data.tsv](examples/thedata/B-data.viz.html) 
+ -  [C-data.tsv](examples/thedata/C-data.viz.html) 
+ -  [D-data.tsv](examples/thedata/D-data.viz.html) 
+ -  [E-data.tsv](examples/thedata/E-data.viz.html) 
+ -  [F-data.tsv](examples/thedata/F-data.viz.html) 
+ -  [G-data.tsv](examples/thedata/G-data.viz.html) 
+ -  [H-data.tsv](examples/thedata/H-data.viz.html) 
+ -  [I-data.tsv](examples/thedata/I-data.viz.html) 
+ -  [J-data.tsv](examples/thedata/J-data.viz.html) 
+ 
+
+
+Another exercise
+----------------
+
+**Goal:**
+Compare different $k$ with $k$-means on the `iris` dataset.
+
+1.  Make subdirectories, called `iris/k`, for $1 \le k \le 5$.
+2.  In each make a file called `config.js`, using e.g.
+
+    ```{.R}
+    library(jsonlite)
+    cat(toJSON(list(k=3)),file="config.json")
+    ```
+3.  Make a template that reads `config.js` (with `fromJSON`)
+   and then runs `kmeans` with the appropriate `k`.
+
+
+Other resources
+===============
+
+
+---------------
+
+ *  my [technical notes](technical-notes.html) I made while writing this up
+ -  [Karl Broman's](http://kbroman.org/knitr_knutshell/pages/Rmarkdown.html) intro to Rmarkdown
+ -  the extensive, excellent [documentation for pandoc](http://pandoc.org/README.html)
+ -  [Stack](http://stackoverflow.com/questions/tagged/rmarkdown)[Overflow](http://stackoverflow.com/questions/tagged/knitr)
+
+
