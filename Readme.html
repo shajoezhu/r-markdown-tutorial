@@ -59,6 +59,10 @@ cd r-markdown-turoial
 git submodule init &amp;&amp; git submodule update</code></pre>
 <p>With an up-to-date version of pandoc, R, and knitr, you should be able to compile the presentation like so:</p>
 <pre class="sh"><code>make using-rmarkdown.slides.html</code></pre>
+<p><em>Note:</em> OSX, for some reason, passes strings through make differently, so you need to uncomment a line in the Makefile, so it looks like this:</p>
+<pre><code># or, uncomment for OSX:
+KNITR_PATTERNS = list( chunk.begin=&quot;^```+\\\\s*\\\\{[.]?(r[a-zA-Z]*.*)\\\\}\\\\s*$$&quot;, chunk.end=&quot;^```+\\\\s*$$&quot;, inline.code=&quot;`r +([^`]+)\\\\s*`&quot;)</code></pre>
+<p>(the only difference is an extra level of escaping the slashes).</p>
 <p>Since I give presentations sometimes not on the internet, this by default relies on a local installation of MathJax, so unless you've installed this on Debian/Ubuntu (<code>aptitude install libjs-mathjax</code>), to view tha maths properly you need to change the location in the Makefile.</p>
 <p>The presentation will not render in Rstudio because: by default, <code>knitr</code> tries to process all code blocks; so to have example code in the document you have to munge your own code. To keep my document processable by just pandoc, and prettier (except the inline code) I am rendering the presentation after modifying the regular expression knitr uses to identify code chunks to require exactly three backticks, at the start of the line, and the identifier <code>r</code> (by default it is much more lax). See the Makefile for how this is done.</p>
 </body>
