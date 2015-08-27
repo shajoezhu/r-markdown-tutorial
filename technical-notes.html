@@ -44,7 +44,7 @@ code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Ann
 code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
 code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
   </style>
-  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+  <script src="/usr/share/javascript/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 </head>
 <body>
 <div id="header">
@@ -52,6 +52,27 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2 class="author">Peter Ralph</h2>
 <h3 class="date">June 2, 2015</h3>
 </div>
+<h1 id="gotchas">Gotchas</h1>
+<p>These things were confusing to me for a while. They might be to others also. More general notes are below.</p>
+<h2 id="how-to-format-latex-for-pandoc">How to format <span class="math inline">\(\LaTeX\)</span> for pandoc</h2>
+<p>There are a lot of different ways to enter math in LaTeX already, and there's more when using pandoc. This is kinda nice for the newcomer to LaTeX, since it's more forgiving, but if you want to produce <em>both</em> html and pdf output, you have to do it just right. For html output, it seems safe to just wrap everything in $$s; but this breaks when passed to pdflatex. The solution: <em>don't</em> do it.</p>
+<ul>
+<li>If you are producing pdf, pandoc will pass your LaTeX directly to pdflatex; so your code needs to be valid there.</li>
+<li>If you are producing html, pandoc <a href="https://github.com/jgm/pandoc/commit/4f0c5c30809f09bd700cd47035f86a3db1c64669">includes raw LaTeX blocks if --mathjax is specified</a>, so you can go ahead and use \align environments and everything.</li>
+<li>Definitions (\newcommand, etc) go at the top of the file, after the YAML header.</li>
+</ul>
+<p>For instance, this file:</p>
+<pre><code>\newcommand{\R}{\mathbb{R}}
+
+This is for $\R$eal.
+\begin{align}
+    e^{i\pi} = -1
+\end{align}</code></pre>
+<p>compiles just fine with</p>
+<pre><code>pandoc test.md -o test.pdf
+pandoc test.md --standalone --mathjax -o test.html</code></pre>
+<h2 id="do-not-use-rmarkdown-to-produce-templated-reports">Do <em>not</em> use <code>rmarkdown</code> to produce templated reports</h2>
+<p>It's nice and convenient to turn your <code>.Rmd</code> files into html using <code>rmarkdown</code>'s function <code>render()</code>. And, R+markdown is a great way to produce templated reports: write one .Rmd file; apply it to many datasets of the same structure. <strong>But</strong>, as I discovered the hard way, if you call, say, <code>render(&quot;template.Rmd&quot;,output_file=&quot;a.html&quot;)</code> and <code>render(&quot;template.Rmd&quot;,output_file=&quot;b.html&quot;)</code> at the same time in different R sessions, with different variables, you won't get different reports, you'll get the same one twice, silently. As far as I can tell, there's <a href="https://github.com/rstudio/rmarkdown/issues/499">no workaround</a> with rmarkdown; the way to do it is to call <code>knitr</code> and <code>pandoc</code> yourself (which is what rmarkdown does under the hood anyhow).</p>
 <h1 id="pandoc-invocation">pandoc invocation</h1>
 <h2 id="general">General</h2>
 <ul>
@@ -148,7 +169,7 @@ knitr::all_patterns$md$chunk.end
 <p>Since this is interpreted relative to the <em>working directory</em> of the R session that calls knitr, it may be best to always set</p>
 <div class="sourceCode"><pre class="sourceCode R"><code class="sourceCode r">opts_knit$<span class="kw">set</span>(<span class="dt">root.dir=</span><span class="st">&quot;.&quot;</span>)</code></pre></div>
 <p>in templates. (But, beware of any dependencies!)</p>
-<p><em>Note:</em> some people try to call <code>setwd()</code> within their <code>.Rmd</code> file. But, <code>knitr</code> resets this for each chunk (and, chastizes you!).</p>
+<p><em>Note:</em> some people try to call <code>setwd()</code> within their <code>.Rmd</code> file. But, <code>knitr</code> resets this for each chunk (and, chastises you!).</p>
 <h2 id="knitr-and-for-loops">knitr and for loops</h2>
 <p>If <code>knitr</code> doesn't always make plots/output every time around the for loop, the problem might be there's an error or something early on?</p>
 <h2 id="tables">Tables</h2>
@@ -158,6 +179,18 @@ knitr::all_patterns$md$chunk.end
  dtab &lt;- xtable( table( sample( letters, 300, replace=TRUE ) ) )
  print(dtab,type=&#39;html&#39;)
  ```</code></pre>
+<h1 id="more-on-templates">More on templates</h1>
+<p>Currently (8/17/2015), rmarkdown's <code>render</code> function <a href="https://github.com/rstudio/rmarkdown/issues/499"><strong>cannot</strong> be used</a> for templates that might be compiled at the same time with different data. There is no workaround. This is too bad, because render parses the YAML header, and makes the resulting html look nice. Let's look under the hood to see how to replicate it. Here's the call to <code>pandoc</code>:</p>
+<p><code>pandoc</code>: * <code>+RTS -K512m -RTS</code> : this increases pandoc's stack space * <code>test2.utf8.md</code> : the input file * <code>--to html</code> : the output format * <code>--from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash-implicit_figures</code> : the input format * <code>+autolink_bare_uris</code> : Makes all absolute URIs into links. * <code>+ascii_identifiers</code> : Causes the identifiers produced by auto_identifiers to be pure ASCII. * <code>+tex_math_single_backslash</code> : Causes <code>\(\)</code> and <code>\[\]</code> to be displayed as math. * <code>-implicit_figures</code> : An image occurring by itself in a paragraph will be rendered as a figure with a caption. * <code>--output one/one.html</code> : output file * <code>--smart</code> : curly quotes, em and en dashes, and ellipses. * <code>--email-obfuscation none</code> * <code>--self-contained --standalone</code> * <code>--section-divs</code> : Wrap sections in <code>&lt;div&gt;</code> tags. * <code>--template /usr/local/lib/R/site-library/rmarkdown/rmd/h/default.html</code> : rmarkdown's template * <code>--variable 'theme:bootstrap'</code> : variable to the template * <code>--include-in-header /tmp/RtmpLnM0EY/rmarkdown-str65b85d06d7aa.html</code> : this does various things: * <code>&lt;script src=&quot;/usr/local/lib/R/site-library/rmarkdown/rmd/h/jquery-1.11.0/jquery.min.js&quot;&gt;&lt;/script&gt;</code> * <code>&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot; /&gt;</code> * <code>&lt;script src=&quot;/usr/local/lib/R/site-library/rmarkdown/rmd/h/bootstrap-3.3.1/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;</code> * <code>&lt;script src=&quot;/usr/local/lib/R/site-library/rmarkdown/rmd/h/bootstrap-3.3.1/shim/html5shiv.min.js&quot;&gt;&lt;/script&gt;</code> * <code>&lt;script src=&quot;/usr/local/lib/R/site-library/rmarkdown/rmd/h/bootstrap-3.3.1/shim/respond.min.js&quot;&gt;&lt;/script&gt;</code> * and includes <a href="https://necolas.github.io/normalize.css/3.0.2/normalize.css">normalize.css</a> * <code>--mathjax --variable 'mathjax-url:https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'</code> : The template inserts mathjax itself. * <code>--no-highlight --variable highlightjs=/usr/local/lib/R/site-library/rmarkdown/rmd/h/highlight</code> : Turn off pandoc highlighting and tell the template to do the highlighting.</p>
+<p>We can trim this down to</p>
+<pre><code>MATHJAX=/usr/share/javascript/mathjax/MathJax.js  # for local mathjax
+PANDOC_OPTS=&quot;--to html --from markdown-implicit_figures \\
+    --standalone --self-contained --section-divs --template template.html \\
+    --variable &#39;theme:bootstrap&#39; --include-in-header resources/header-scripts.html \\
+    --mathjax --variable mathjax-url:$MATHJAX?config=TeX-AMS-MML_HTMLorMML&#39;&quot;</code></pre>
+<p>So, now to turn <code>input.Rmd</code> into <code>output.html</code>, in a safe way, we can run</p>
+<pre><code>R --vanilla -e &#39;knitr::knit(&quot;input.Rmd&quot;,output=&quot;output.md&quot;)&#39;
+pandoc output.md ${PANDOC_OPTS} --output output.html</code></pre>
 <h1 id="formatting-and-layout">Formatting and layout</h1>
 <h2 id="customization">Customization</h2>
 <p>Options:</p>
