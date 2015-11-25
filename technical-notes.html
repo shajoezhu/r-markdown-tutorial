@@ -44,7 +44,17 @@ code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Ann
 code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
 code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
   </style>
-  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+  <script src="/usr/share/javascript/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+  \[
+  %%
+  % Add your macros here; they'll be included in pdf and html output.
+  %%
+  
+  \newcommand{\R}{\mathbb{R}}    % reals
+  \newcommand{\E}{\mathbb{E}}    % expectation
+  \renewcommand{\P}{\mathbb{P}}  % probability
+  
+  \]
 </head>
 <body>
 <div id="header">
@@ -52,13 +62,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2 class="author">Peter Ralph</h2>
 <h3 class="date">June 2, 2015</h3>
 </div>
+<p>It might help to have an up-to-date <a href="http://pandoc.org">pandoc</a>. You can probably get an installer for the most recent version <a href="https://github.com/jgm/pandoc/releases/">here</a>.</p>
 <h1 id="pandoc-invocation">pandoc invocation</h1>
 <h2 id="general">General</h2>
 <ul>
 <li><code>-o (output file name)</code> : where to put output</li>
 <li><code>--standalone</code> : produces a standalone document, not a code fragment (using one of <a href="https://github.com/jgm/pandoc-templates">these</a> <a href="http://pandoc.org/README.html#templates">templates</a>)</li>
 <li><code>--from=(format name)[+/-(extension name)]</code> : what to write out to (defaults to html) and optional turning on/off of various behavior, <a href="http://pandoc.org/README.html#pandocs-markdown">listed here</a></li>
-<li><code>--include-in-header=(file name)</code> : at the end of the header, e.g. css, javascript, <code>\newcommand</code>, etc. (but see <code>--css</code>)</li>
+<li><code>--include-in-header=(file name)</code> : at the end of the header, e.g. css, javascript, <code>\newcommand</code>, etc. (but see <code>--css</code>, and <a href="gotchas.html">gotachas</a> for latex macros)</li>
 <li><code>--include-before-body=(file name)</code> : at the beginning of the body, e.g. navigation bars, <code>\maketitle</code>, etc.</li>
 <li><code>--self-contained</code> : everything in one file (but see <code>--mathjax</code>)</li>
 <li><code>--mathjax[=URL]</code> : points to the <code>MathJax.js</code> script, <em>incompatible</em> with <code>--selfcontained</code></li>
@@ -160,14 +171,44 @@ knitr::all_patterns$md$chunk.end
  ```</code></pre>
 <h1 id="more-on-templates">More on templates</h1>
 <p>Currently (8/17/2015), rmarkdown's <code>render</code> function <a href="https://github.com/rstudio/rmarkdown/issues/499"><strong>cannot</strong> be used</a> for templates that might be compiled at the same time with different data. There is no workaround. This is too bad, because render parses the YAML header, and makes the resulting html look nice. Let's look under the hood to see how to replicate it. Here's the call to <code>pandoc</code>:</p>
-<p><code>pandoc</code>: * <code>+RTS -K512m -RTS</code> : this increases pandoc's stack space * <code>test2.utf8.md</code> : the input file * <code>--to html</code> : the output format * <code>--from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash-implicit_figures</code> : the input format * <code>+autolink_bare_uris</code> : Makes all absolute URIs into links. * <code>+ascii_identifiers</code> : Causes the identifiers produced by auto_identifiers to be pure ASCII. * <code>+tex_math_single_backslash</code> : Causes <code>\(\)</code> and <code>\[\]</code> to be displayed as math. * <code>-implicit_figures</code> : An image occurring by itself in a paragraph will be rendered as a figure with a caption. * <code>--output one/one.html</code> : output file * <code>--smart</code> : curly quotes, em and en dashes, and ellipses. * <code>--email-obfuscation none</code> * <code>--self-contained --standalone</code> * <code>--section-divs</code> : Wrap sections in <code>&lt;div&gt;</code> tags. * <code>--template /usr/local/lib/R/site-library/rmarkdown/rmd/h/default.html</code> : rmarkdown's template * <code>--variable 'theme:bootstrap'</code> : variable to the template * <code>--include-in-header /tmp/RtmpLnM0EY/rmarkdown-str65b85d06d7aa.html</code> : this does various things: * <code>&lt;script src=&quot;/usr/local/lib/R/site-library/rmarkdown/rmd/h/jquery-1.11.0/jquery.min.js&quot;&gt;&lt;/script&gt;</code> * <code>&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot; /&gt;</code> * <code>&lt;script src=&quot;/usr/local/lib/R/site-library/rmarkdown/rmd/h/bootstrap-3.3.1/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;</code> * <code>&lt;script src=&quot;/usr/local/lib/R/site-library/rmarkdown/rmd/h/bootstrap-3.3.1/shim/html5shiv.min.js&quot;&gt;&lt;/script&gt;</code> * <code>&lt;script src=&quot;/usr/local/lib/R/site-library/rmarkdown/rmd/h/bootstrap-3.3.1/shim/respond.min.js&quot;&gt;&lt;/script&gt;</code> * and includes <a href="https://necolas.github.io/normalize.css/3.0.2/normalize.css">normalize.css</a> * <code>--mathjax --variable 'mathjax-url:https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'</code> : The template inserts mathjax itself. * <code>--no-highlight --variable highlightjs=/usr/local/lib/R/site-library/rmarkdown/rmd/h/highlight</code> : Turn off pandoc highlighting and tell the template to do the highlighting.</p>
+<p><code>pandoc</code>:</p>
+<ul>
+<li><code>+RTS -K512m -RTS</code> : this increases pandoc's stack space</li>
+<li><code>test2.utf8.md</code> : the input file</li>
+<li><code>--to html</code> : the output format</li>
+<li><code>--from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash-implicit_figures</code> : the input format
+<ul>
+<li><code>+autolink_bare_uris</code> : Makes all absolute URIs into links.</li>
+<li><code>+ascii_identifiers</code> : Causes the identifiers produced by auto_identifiers to be pure ASCII.</li>
+<li><code>+tex_math_single_backslash</code> : Causes <code>\(\)</code> and <code>\[\]</code> to be displayed as math.</li>
+<li><code>-implicit_figures</code> : An image occurring by itself in a paragraph will be rendered as a figure with a caption.</li>
+</ul></li>
+<li><code>--output one/one.html</code> : output file</li>
+<li><code>--smart</code> : curly quotes, em and en dashes, and ellipses.</li>
+<li><code>--email-obfuscation none</code></li>
+<li><code>--self-contained --standalone</code></li>
+<li><code>--section-divs</code> : Wrap sections in <code>&lt;div&gt;</code> tags.</li>
+<li><code>--template /usr/local/lib/R/site-library/rmarkdown/rmd/h/default.html</code> : rmarkdown's template</li>
+<li><code>--variable 'theme:bootstrap'</code> : variable to the template</li>
+<li><code>--include-in-header /tmp/RtmpLnM0EY/rmarkdown-str65b85d06d7aa.html</code> : this does various things:
+<ul>
+<li><code>&lt;script src=&quot;/usr/local/lib/R/site-library/rmarkdown/rmd/h/jquery-1.11.0/jquery.min.js&quot;&gt;&lt;/script&gt;</code></li>
+<li><code>&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot; /&gt;</code></li>
+<li><code>&lt;script src=&quot;/usr/local/lib/R/site-library/rmarkdown/rmd/h/bootstrap-3.3.1/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;</code></li>
+<li><code>&lt;script src=&quot;/usr/local/lib/R/site-library/rmarkdown/rmd/h/bootstrap-3.3.1/shim/html5shiv.min.js&quot;&gt;&lt;/script&gt;</code></li>
+<li><code>&lt;script src=&quot;/usr/local/lib/R/site-library/rmarkdown/rmd/h/bootstrap-3.3.1/shim/respond.min.js&quot;&gt;&lt;/script&gt;</code></li>
+<li>and includes <a href="https://necolas.github.io/normalize.css/3.0.2/normalize.css">normalize.css</a></li>
+</ul></li>
+<li><code>--mathjax --variable 'mathjax-url:https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'</code> : The template inserts mathjax itself.</li>
+<li><code>--no-highlight --variable highlightjs=/usr/local/lib/R/site-library/rmarkdown/rmd/h/highlight</code> : Turn off pandoc highlighting and tell the template to do the highlighting.</li>
+</ul>
 <p>We can trim this down to</p>
 <pre><code>MATHJAX=/usr/share/javascript/mathjax/MathJax.js  # for local mathjax
 PANDOC_OPTS=&quot;--to html --from markdown-implicit_figures \\
     --standalone --self-contained --section-divs --template template.html \\
     --variable &#39;theme:bootstrap&#39; --include-in-header resources/header-scripts.html \\
     --mathjax --variable mathjax-url:$MATHJAX?config=TeX-AMS-MML_HTMLorMML&#39;&quot;</code></pre>
-<p>So, now to turn <code>input.Rmd</code> into <code>output.html</code>, in a safe way, we can run</p>
+<p>So, now to turn <code>input.Rmd</code> into <code>output.html</code>, in a safe way, we need to get the header-scripts file and then run</p>
 <pre><code>R --vanilla -e &#39;knitr::knit(&quot;input.Rmd&quot;,output=&quot;output.md&quot;)&#39;
 pandoc output.md ${PANDOC_OPTS} --output output.html</code></pre>
 <h1 id="formatting-and-layout">Formatting and layout</h1>

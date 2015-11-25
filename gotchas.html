@@ -9,6 +9,16 @@
   <title>R+markdown gotchas</title>
   <style type="text/css">code{white-space: pre;}</style>
   <script src="/usr/share/javascript/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+  \[
+  %%
+  % Add your macros here; they'll be included in pdf and html output.
+  %%
+  
+  \newcommand{\R}{\mathbb{R}}    % reals
+  \newcommand{\E}{\mathbb{E}}    % expectation
+  \renewcommand{\P}{\mathbb{P}}  % probability
+  
+  \]
 </head>
 <body>
 <div id="header">
@@ -22,7 +32,7 @@
 <ul>
 <li>If you are producing pdf, pandoc will pass your LaTeX directly to pdflatex; so your code needs to be valid there.</li>
 <li>If you are producing html, pandoc <a href="https://github.com/jgm/pandoc/commit/4f0c5c30809f09bd700cd47035f86a3db1c64669">includes raw LaTeX blocks if --mathjax is specified</a>, so you can go ahead and use \align environments and everything.</li>
-<li>Definitions (\newcommand, etc) go at the top of the file, after the YAML header.</li>
+<li>Definitions (\newcommand, etc) go at the top of the file, after the YAML header (but see below).</li>
 </ul>
 <p>For instance, this file:</p>
 <pre><code>\newcommand{\R}{\mathbb{R}}
@@ -34,6 +44,12 @@ $$\begin{aligned}
 <p>compiles just fine both with</p>
 <pre><code>pandoc test.md -o test.pdf
 pandoc test.md --standalone --mathjax -o test.html</code></pre>
+<h2 id="how-to-robustly-define-macros-that-work-for-both-pdf-and-html">How to robustly define macros that work for both pdf and html</h2>
+<p>The macros in the above example get expanded because all the math is in simple math environments. If you want to use ams environments like <code>\begin{align}</code>, then there's <a href="https://github.com/jgm/pandoc/issues/2382">no way to include macros</a> directly in the document that works for both html and pdf output. One nice way around this is to keep your macros in a separate file which is passed to pandoc by a variable, and insert them in the header using the <code>-H</code> flag; you just have to make sure to wrap them in a math environment for mathjax to use them:</p>
+<pre><code># for pdf
+pandoc test.md -H macros.tex -o test.pdf
+# for html
+pandoc test.md -H &lt;(echo &#39;\[&#39;; cat macros.tex; echo &#39;\]&#39;) --mathjax --standalone -o test.html</code></pre>
 <h1 id="rmarkdown-does-not-work-with-templated-reports"><code>rmarkdown</code> does not work with templated reports</h1>
 <p>It's nice and convenient to turn your <code>.Rmd</code> files into html using <code>rmarkdown</code>'s function <code>render()</code>. And, R+markdown is a great way to produce templated reports: write one .Rmd file; apply it to many datasets of the same structure. <strong>But</strong>, as I discovered the hard way, if you call, say, <code>render(&quot;template.Rmd&quot;,output_file=&quot;a.html&quot;)</code> and <code>render(&quot;template.Rmd&quot;,output_file=&quot;b.html&quot;)</code> at the same time in different R sessions, with different variables, you won't get different reports, you'll get the same one twice, silently. As far as I can tell, there's <a href="https://github.com/rstudio/rmarkdown/issues/499">no workaround</a> with rmarkdown; the way to do it is to call <code>knitr</code> and <code>pandoc</code> yourself (which is what rmarkdown does under the hood anyhow).</p>
 <h1 id="name-every-chunk-a-different-name-even-in-different-files">Name every chunk a different name, <em>even in different files</em></h1>
