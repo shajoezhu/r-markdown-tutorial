@@ -6,11 +6,58 @@
   <meta name="generator" content="pandoc" />
   <title></title>
   <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  \[
+  %%
+  % Add your macros here; they'll be included in pdf and html output.
+  %%
+  
+  \newcommand{\R}{\mathbb{R}}    % reals
+  \newcommand{\E}{\mathbb{E}}    % expectation
+  \renewcommand{\P}{\mathbb{P}}  % probability
+  
+  \]
 </head>
 <body>
 <h1 id="a-quick-introduction-to-rmarkdown">A quick introduction to R/markdown</h1>
 <p>These are notes and materials for a short (2-hour) course on using R/markdown to generate reports and dynamic documents.</p>
-<p>Here's a link to <a href="http://petrelharp.github.io/r-markdown-tutorial/using-rmarkdown.slides.html">the slides</a>. Also, here are some <a href="http://petrelharp.github.io/r-markdown-tutorial/technical-notes.html">technical notes</a> on getting pandoc, R+markdown, and this presentation to work.</p>
+<p>Here's a link to <a href="http://petrelharp.github.io/r-markdown-tutorial/using-rmarkdown.slides.html">the slides</a>. Here is also a document with some <a href="http://petrelharp.github.io/r-markdown-tutorial/gotchas.html">gotchas</a> that I've figured out my way around, and some <a href="http://petrelharp.github.io/r-markdown-tutorial/technical-notes.html">technical notes</a> on getting pandoc, R+markdown, and this presentation to work.</p>
 <h2 id="outline">Outline</h2>
 <ol style="list-style-type: decimal">
 <li><p>Markdown</p>
@@ -54,11 +101,11 @@
 </ol>
 <h2 id="compiling-the-presentation-yourself">Compiling the presentation yourself</h2>
 <p>The presentation uses <a href="http://lab.hakim.se/reveal-js/">reveal.js</a>. You can get this repository along with reveal.js like so:</p>
-<pre class="sh"><code>git clone https://github.com/petrelharp/r-markdown-tutorial.git
-cd r-markdown-turoial
-git submodule init &amp;&amp; git submodule update</code></pre>
+<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="fu">git</span> clone https://github.com/petrelharp/r-markdown-tutorial.git
+<span class="bu">cd</span> r-markdown-turoial
+<span class="fu">git</span> submodule init <span class="kw">&amp;&amp;</span> <span class="fu">git</span> submodule update</code></pre></div>
 <p>With an up-to-date version of pandoc, R, and knitr, you should be able to compile the presentation like so:</p>
-<pre class="sh"><code>make using-rmarkdown.slides.html</code></pre>
+<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="fu">make</span> using-rmarkdown.slides.html</code></pre></div>
 <p><em>Note:</em> OSX, for some reason, passes strings through make differently, so you need to uncomment a line in the Makefile, so it looks like this:</p>
 <pre><code># or, uncomment for OSX:
 KNITR_PATTERNS = list( chunk.begin=&quot;^```+\\\\s*\\\\{[.]?(r[a-zA-Z]*.*)\\\\}\\\\s*$$&quot;, chunk.end=&quot;^```+\\\\s*$$&quot;, inline.code=&quot;`r +([^`]+)\\\\s*`&quot;)</code></pre>

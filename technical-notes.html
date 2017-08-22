@@ -97,21 +97,21 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <ol style="list-style-type: decimal">
 <li><p>reveal.js : pandoc 1.12 works only with reveal.js &lt;= 2.6.2.</p>
 <p>So, if your pandoc is old, do this:</p>
-<pre class="sh"><code>cd reveal.js
-git checkout 2.6.2
-cd ..</code></pre></li>
+<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="bu">cd</span> reveal.js
+<span class="fu">git</span> checkout 2.6.2
+<span class="bu">cd</span> ..</code></pre></div></li>
 <li><p><strong>S5</strong> :</p>
-<pre class="sh"><code>mkdir s5 &amp;&amp; cd s5
-wget http://meyerweb.com/eric/tools/s5/v/1.1/s5-11.zip
-unzip s5-11.zip 
-ln -s ui/default default</code></pre></li>
+<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="fu">mkdir</span> s5 <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> s5
+<span class="fu">wget</span> http://meyerweb.com/eric/tools/s5/v/1.1/s5-11.zip
+<span class="fu">unzip</span> s5-11.zip 
+<span class="fu">ln</span> -s ui/default default</code></pre></div></li>
 <li><p><strong>dzslides</strong> : No setup, but seems to be broken.</p></li>
 <li><p><strong>slidy</strong> : No setup, downloads from [w3c.org]</p></li>
 <li><p><strong>slideous</strong> : Doesn't seem to produce a slideshow?</p>
-<pre class="sh"><code>mkdir slideous
-cd slideous/
-wget http://goessner.net/download/prj/slideous/slideous.zip
-unzip slideous.zip </code></pre></li>
+<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="fu">mkdir</span> slideous
+<span class="bu">cd</span> slideous/
+<span class="fu">wget</span> http://goessner.net/download/prj/slideous/slideous.zip
+<span class="fu">unzip</span> slideous.zip </code></pre></div></li>
 </ol>
 <h1 id="knitr-and-such">knitr and such</h1>
 <h2 id="options-for-rendering-using-r">Options for rendering using R</h2>
@@ -144,7 +144,7 @@ unzip slideous.zip </code></pre></li>
 knitr::all_patterns$md$chunk.end
 ## [1] &quot;^[\t &gt;]*```+\\s*$&quot;</code></pre></div>
 <p>Yihui's trick for getting around this is to use R to insert an &quot;&quot; into the preamble, like so:</p>
-<pre class="md"><code> ``r &quot;&quot;```</code></pre>
+<div class="sourceCode"><pre class="sourceCode md"><code class="sourceCode markdown"> `<span class="bn">`r &quot;&quot;`</span>``</code></pre></div>
 <p>Parsed that?</p>
 <p>Here's an inline example:</p>
 <pre><code>inline `R` code (`` ``r &quot;r nrow(data)&quot;`` ``)</code></pre>

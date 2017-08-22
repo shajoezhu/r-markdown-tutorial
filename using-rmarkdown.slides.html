@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
-  <meta name="author" content="Peter Ralph" />
+  <meta name="author" content="Peter Ralph">
   <title>Narrowing the brain-publication barrier with R+markdown</title>
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <link rel="stylesheet" href="reveal.js/css/reveal.css"/>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/css/reveal.css">
   <style type="text/css">code{white-space: pre;}</style>
   <style type="text/css">
 div.sourceCode { overflow-x: auto; }
@@ -48,20 +48,18 @@ code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* Com
 code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
   </style>
   <link rel="stylesheet" href="reveal.js/css/theme/simple.css" id="theme">
-  <!-- If the query includes 'print-pdf', include the PDF print sheet -->
+  <!-- Printing and PDF exports -->
   <script>
-    if( window.location.search.match( /print-pdf/gi ) ) {
-      var link = document.createElement( 'link' );
-      link.rel = 'stylesheet';
-      link.type = 'text/css';
-      link.href = 'reveal.js/css/print/pdf.css';
-      document.getElementsByTagName( 'head' )[0].appendChild( link );
-    }
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
   </script>
   <!--[if lt IE 9]>
   <script src="reveal.js/lib/js/html5shiv.js"></script>
   <![endif]-->
-  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+  <script src="/usr/share/javascript/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
   <style type="text/css">
   
   .reveal h1 { font-size: 2.5em; } 
@@ -73,15 +71,25 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
   .reveal figcaption { display: none; }
   
   </style>
+  \[
+  %%
+  % Add your macros here; they'll be included in pdf and html output.
+  %%
+  
+  \newcommand{\R}{\mathbb{R}}    % reals
+  \newcommand{\E}{\mathbb{E}}    % expectation
+  \renewcommand{\P}{\mathbb{P}}  % probability
+  
+  \]
 </head>
 <body>
   <div class="reveal">
     <div class="slides">
 
 <section>
-    <h1 class="title">Narrowing the brain-publication barrier with R+markdown</h1>
-    <h2 class="author">Peter Ralph</h2>
-    <h3 class="date">June 2, 2015</h3>
+  <h1 class="title">Narrowing the brain-publication barrier with R+markdown</h1>
+  <h2 class="author">Peter Ralph</h2>
+  <h3 class="date">June 2, 2015</h3>
 </section>
 
 <section><section id="markdown" class="titleslide slide level1"><h1>Markdown</h1></section><section id="goal" class="slide level2">
@@ -203,16 +211,16 @@ $$ \frac{\pi}{4} = \sum_{n=0}^\infty \frac{(-1)^n}{2k+1} .$$</code></pre>
 </section><section class="slide level2">
 
 <p>Even math environments <em>inside</em> double dollar signs:</p>
-<pre class="md"><code>$$
+<div class="sourceCode"><pre class="sourceCode md"><code class="sourceCode markdown">$$
 \begin{align}
+<span class="bn">    x &amp;= (a+b)^2 - (a-b)^2 \\</span>
+<span class="bn">      &amp;= 4ab</span>
+\end{align}
+$$</code></pre></div>
+<span class="math display">\[\begin{align}
     x &amp;= (a+b)^2 - (a-b)^2 \\
       &amp;= 4ab
-\end{align}
-$$</code></pre>
-\begin{align}
-    x &amp;= (a+b)^2 - (a-b)^2 \\
-      &amp;= 4ab
-\end{align}
+\end{align}\]</span>
 </section><section id="code-blocks" class="slide level2">
 <h1>Code blocks</h1>
 <pre><code>```{.r}
@@ -310,7 +318,7 @@ delimited by <strong>exactly three</strong> dashes.</p>
 </section><section id="under-the-hood" class="slide level2">
 <h1>Under the hood</h1>
 <p><a href="http://pandoc.org/README.html"><code>pandoc</code></a></p>
-<pre class="sh"><code>pandoc --help</code></pre>
+<div class="sourceCode"><pre class="sourceCode sh"><code class="sourceCode bash"><span class="ex">pandoc</span> --help</code></pre></div>
 <figure>
 <img src="jgm.png" alt="jgm" /><figcaption>jgm</figcaption>
 </figure>
@@ -430,7 +438,7 @@ see?
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> <span class="kw">library</span>(pander)
  bases &lt;-<span class="st"> </span><span class="kw">table</span>( <span class="kw">sample</span>( <span class="kw">c</span>(<span class="st">&quot;A&quot;</span>,<span class="st">&quot;C&quot;</span>,<span class="st">&quot;G&quot;</span>,<span class="st">&quot;T&quot;</span>), <span class="dv">300</span>, <span class="dt">replace=</span><span class="ot">TRUE</span> ) )
  <span class="kw">pander</span>(<span class="kw">t</span>(bases))</code></pre></div>
-<table>
+<table style="width:22%;">
 <colgroup>
 <col style="width: 5%" />
 <col style="width: 5%" />
@@ -447,10 +455,10 @@ see?
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: center;">74</td>
-<td style="text-align: center;">71</td>
-<td style="text-align: center;">73</td>
-<td style="text-align: center;">82</td>
+<td style="text-align: center;">61</td>
+<td style="text-align: center;">69</td>
+<td style="text-align: center;">91</td>
+<td style="text-align: center;">79</td>
 </tr>
 </tbody>
 </table>
@@ -557,7 +565,7 @@ for (input.file in file.names) {
     output.file &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">&quot;.tsv$&quot;</span>,<span class="st">&quot;.viz.html&quot;</span>,input.file)
     <span class="kw">knit2html</span>(<span class="st">&quot;../simple-template.Rmd&quot;</span>, <span class="dt">output=</span>output.file, <span class="dt">quiet=</span><span class="ot">TRUE</span>)
 }</code></pre></div>
-<pre><code>## Error in parse_block(g[-1], g[1], params.src): duplicate label &#39;setup&#39;</code></pre>
+<pre><code>## Error: It seems you should call rmarkdown::render() instead of knitr::knit2html() because ../simple-template.Rmd appears to be an R Markdown v2 document.</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">setwd</span>(owd)</code></pre></div>
 </section><section class="slide level2">
 
@@ -602,32 +610,26 @@ for (input.file in file.names) {
     </div>
   </div>
 
-
   <script src="reveal.js/lib/js/head.min.js"></script>
   <script src="reveal.js/js/reveal.js"></script>
 
   <script>
 
-      // Full list of configuration options available here:
+      // Full list of configuration options available at:
       // https://github.com/hakimel/reveal.js#configuration
       Reveal.initialize({
-        controls: true,         // Display controls in the bottom right corner
-        progress: true,         // Display a presentation progress bar
-        history: true,          // Push each slide change to the browser history
-        center: true,                       // Vertical centering of slides
-        maxScale: 1.5,                  // Bounds for smallest/largest possible content scale
-        slideNumber: true,                // Display the page number of the current slide
-        theme: 'simple', // available themes are in /css/theme
-        transition: 'none', // default/cube/page/concave/zoom/linear/fade/none
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Transition style
+        transition: 'none', // none/fade/slide/convex/concave/zoom
 
-        // Optional libraries used to extend on reveal.js
+        // Optional reveal.js plugins
         dependencies: [
           { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
-          { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
-          { src: 'reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
-//          { src: 'reveal.js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
-//          { src: 'reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
-]});
+          { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true },
+          { src: 'reveal.js/plugin/notes/notes.js', async: true }
+        ]
+      });
     </script>
     </body>
 </html>
