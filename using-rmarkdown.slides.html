@@ -60,7 +60,22 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
   <!--[if lt IE 9]>
   <script src="reveal.js/lib/js/html5shiv.js"></script>
   <![endif]-->
-  <script src="/usr/share/javascript/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+<script>
+  (function () {
+    erfun = function () { 
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.onerror = erfun;
+        script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+        document.getElementsByTagName("head")[0].appendChild(script);
+    };
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.onerror = erfun;
+    script.src  = "/usr/share/javascript/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
   <style type="text/css">
   
   .reveal h1 { font-size: 2.5em; } 
