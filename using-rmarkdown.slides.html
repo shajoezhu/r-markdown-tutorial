@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
   <meta name="author" content="Peter Ralph">
-  <meta name="dcterms.date" content="2017-08-22">
+  <meta name="dcterms.date" content="2017-08-23">
   <title>Writing reproducible, re-usable reports, with R + markdown</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -105,7 +105,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <section>
   <h1 class="title">Writing reproducible, re-usable reports, with R + markdown</h1>
   <h2 class="author">Peter Ralph</h2>
-  <h3 class="date">August 22, 2017</h3>
+  <h3 class="date">August 23, 2017</h3>
 </section>
 
 <section><section id="markdown" class="titleslide slide level1"><h1>Markdown</h1></section><section id="goal" class="slide level2">
@@ -321,7 +321,7 @@ Setting width and height are optional.</p>
 <div class="sourceCode"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span class="ot">---</span>
 <span class="fu">title:</span> YOUR TITLE HERE
 <span class="fu">author:</span> YOUR NAME HERE
-<span class="fu">date:</span> June 2, 2015
+<span class="fu">date:</span> August 23, 2017
 <span class="ot">---</span></code></pre></div>
 <p>... the <a href="http://yaml.org/">YAML</a> metadata,<br />
 delimited by <strong>exactly three</strong> dashes.</p>
@@ -406,7 +406,7 @@ $$ \lim_{n \to \infty} 4 \sum_{k=1}^n \frac{ (-1)^n }{ 2n+1 } = \pi , $$
 <ul>
 <li><p>checks that <span class="math display">\[1 + 2 + \cdots + n = n(n+1)/2\]</span> for every <span class="math inline">\(n\)</span> between 1 and 100</p></li>
 <li><p>shows these on a plot</p></li>
-<li><p>explains (briefly) what's being computed</p></li>
+<li><p>explains what's being computed</p></li>
 </ul>
 <p><em>Useful:</em> <code>x = cumsum(1:100)</code> and <code>plot(x)</code> and <code>lines(y)</code>.</p>
 </section><section id="whats-going-on" class="slide level2">
@@ -479,15 +479,15 @@ $$ \lim_{n \to \infty} 4 \sum_{k=1}^n \frac{ (-1)^n }{ 2n+1 } = \pi , $$
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: center;">76</td>
-<td style="text-align: center;">75</td>
-<td style="text-align: center;">79</td>
-<td style="text-align: center;">70</td>
+<td style="text-align: center;">82</td>
+<td style="text-align: center;">68</td>
+<td style="text-align: center;">62</td>
+<td style="text-align: center;">88</td>
 </tr>
 </tbody>
 </table>
-</section><section id="r-everywhere" class="slide level2">
-<h1>R everywhere</h1>
+</section><section id="inline-code" class="slide level2">
+<h1>Inline code</h1>
 <pre class="Rmd"><code>You can 
 `r paste(letters[c(9,14,19,5,18,20)],collapse=&#39;&#39;)` 
 code anywhere.</code></pre>
@@ -497,9 +497,9 @@ code anywhere.</code></pre>
 <p>Even in the YAML header.</p>
 <p>Go change yours!</p>
 <pre><code>---
-title: My notes
-author: Peter Ralph
-date: `r date()`
+title: &quot;My notes&quot;
+author: &quot;Peter Ralph&quot;
+date: &quot;`r date()`&quot;
 ---</code></pre>
 </section></section>
 <section><section id="online-example" class="titleslide slide level1"><h1>Online example</h1></section><section class="slide level2">
@@ -521,12 +521,12 @@ date: `r date()`
 <li><p>Read in the data.</p></li>
 <li><p>Describe the dataset: number of observations, variables, etcetera.</p>
 <ul>
-<li>inline <code>R</code> code (<code>`r nrow(data)`</code>)</li>
+<li>inline <code>R</code> code (<code>`r nrow(iris)`</code>)</li>
 </ul></li>
 <li><p>Make a table of the number of observations for each species.</p>
 <ul>
 <li><code>pander()</code></li>
-<li>or <code>results=&quot;asis&quot;</code> and <code>print.xtable(xtable(),type='html')</code></li>
+<li>or <code>results=&quot;asis&quot;</code> and <code>print.xtable(xtable( ),type='html')</code></li>
 </ul></li>
 <li><p>Plot the flower dimensions against each other,</p>
 <ul>
@@ -536,22 +536,77 @@ date: `r date()`
 </section></section>
 <section><section id="templated-reports" class="titleslide slide level1"><h1>Templated reports</h1></section><section class="slide level2">
 
-<p>Set up some fake data:</p>
+<p>Set up some fake data: each has 50 observations of two quantitative variables (<code>age</code> and <code>height</code>) and a categorical variable (<code>type</code>):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dir.create</span>(<span class="st">&quot;examples/thedata&quot;</span>)
 owd &lt;-<span class="st"> </span><span class="kw">setwd</span>(<span class="st">&quot;examples/thedata&quot;</span>)
-for (samp in LETTERS[<span class="dv">1</span>:<span class="dv">10</span>]) {
+for (samp in LETTERS[<span class="dv">1</span>:<span class="dv">8</span>]) {
+    <span class="kw">dir.create</span>(samp)
     xy &lt;-<span class="st"> </span><span class="kw">data.frame</span>( 
         <span class="dt">age=</span><span class="kw">exp</span>(<span class="kw">rnorm</span>(<span class="dv">50</span>)),
         <span class="dt">type=</span><span class="kw">sample</span>(letters[<span class="dv">1</span>:<span class="dv">3</span>],<span class="dv">50</span>,<span class="dt">replace=</span><span class="ot">TRUE</span>)
     )
     xy$height &lt;-<span class="st"> </span><span class="dv">5</span> +<span class="st"> </span><span class="kw">runif</span>(<span class="dv">1</span>)*xy$age +<span class="st"> </span><span class="dv">3</span>*<span class="kw">runif</span>(<span class="dv">1</span>)*<span class="kw">as.numeric</span>(xy$type) +<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">50</span>)
-    <span class="kw">write.table</span>(xy,<span class="dt">file=</span><span class="kw">paste</span>(samp,<span class="st">&quot;-data.tsv&quot;</span>,<span class="dt">sep=</span><span class="st">&#39;&#39;</span>))
+    <span class="kw">write.table</span>(xy,<span class="dt">file=</span><span class="kw">paste0</span>(samp,<span class="st">&quot;/data.tsv&quot;</span>))
 }
 <span class="kw">setwd</span>(owd)</code></pre></div>
 </section><section class="slide level2">
 
-<p>We now have 10 datasets,<br />
-and would like to <em>visualize</em> each, like:</p>
+<p>We now have 10 datasets, each in a file like <a href="examples/thedata/A/data.tsv"><code>A/data.tsv</code></a>. Here's what one looks like:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">xy</code></pre></div>
+<pre><code>##           age type    height
+## 1   1.1997579    c 11.916029
+## 2   0.5283826    b  7.411976
+## 3   3.0347142    a  7.507691
+## 4   1.0747019    c 11.419730
+## 5   2.7340615    b  6.626345
+## 6   2.2885080    b  8.395060
+## 7   0.9961291    b  8.745695
+## 8   0.4658864    a  7.089114
+## 9   1.2408050    a  6.004790
+## 10 11.9523304    b  7.923671
+## 11  5.1393665    c  8.779126
+## 12  2.1772917    c  8.502596
+## 13  0.3604940    a  6.320543
+## 14  0.7813474    b  7.063837
+## 15  2.7633542    c  8.246285
+## 16  1.3436635    c 10.774662
+## 17  1.4837569    a  5.485839
+## 18  3.2374172    c  9.175347
+## 19  0.3870046    c  8.292467
+## 20  1.0540521    b  7.098497
+## 21  2.5032167    c 10.208936
+## 22  0.7658006    c 10.145847
+## 23  0.5328859    b  7.487314
+## 24  0.2039412    b  8.433746
+## 25  0.5425590    c  9.055336
+## 26  2.2003544    a  6.859916
+## 27  0.4265038    a  5.632862
+## 28  0.8877436    a  6.009548
+## 29  1.8321428    c 10.435334
+## 30  1.5870453    a  7.149562
+## 31  0.7203174    c  9.953470
+## 32  0.8987173    a  4.339708
+## 33  0.3042345    c  9.543950
+## 34  0.6509977    b  6.807858
+## 35  2.9089440    a  7.508232
+## 36  1.1146670    a  6.236124
+## 37  0.4137497    c  9.425765
+## 38  2.2449325    a  7.222966
+## 39  1.7460563    a  6.277565
+## 40  1.1384145    a  6.281458
+## 41  6.0305672    a  8.547754
+## 42  0.2591122    a  5.296081
+## 43  0.3634771    c 11.003437
+## 44  4.9310742    a  7.921592
+## 45  0.9587866    c  8.636260
+## 46  1.5200330    c  8.720071
+## 47  0.8111975    b  7.291246
+## 48  0.5783521    c  9.576671
+## 49  0.8718766    a  6.157239
+## 50  0.3608099    b  8.148258</code></pre>
+</section><section class="slide level2">
+
+<p>We would like to <em>visualize</em> each, like this:</p>
 <figure>
 <img src="figure/using-rmarkdown/plot_one_data-1.png" alt="plot of chunk plot_one_data" /><figcaption>plot of chunk plot_one_data</figcaption>
 </figure>
@@ -559,15 +614,16 @@ and would like to <em>visualize</em> each, like:</p>
 
 <p><strong>The template:</strong> <code>examples/simple-template.Rmd</code></p>
 <pre class="Rmd"><code> ---
- title: Visualization for `r input.file`
- date: `r date()`
+ title: &quot;Visualization for `r getwd()`&quot;
+ date: &quot;`r date()`&quot;
  ---
 
  ```{r setup, echo=FALSE}
+ input.file &lt;- &quot;data.tsv&quot;
  xy &lt;- read.table(input.file)
  ```
 
- The file `r input.file` 
+ The file `r normalizePath(input.file)`
  has `r nrow(xy)` observations:
 
  ```{r}
@@ -575,36 +631,42 @@ and would like to <em>visualize</em> each, like:</p>
  legend( &quot;topleft&quot;, pch=1, col=1:nlevels(xy$type), 
     col=1:nlevels(xy$type) )
  ```</code></pre>
+<p><strong>Input:</strong> this looks for the file <code>data.tsv</code> in the current directory.</p>
 </section><section class="slide level2">
 
 <p><strong>Render it:</strong></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(templater)
-file.names &lt;-<span class="st"> </span><span class="kw">list.files</span>(<span class="st">&quot;examples/thedata&quot;</span>,<span class="st">&quot;.*tsv&quot;</span>)
-for (input.file in file.names) {
-    output.file &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="st">&quot;examples/thedata&quot;</span>, 
-                             <span class="kw">gsub</span>(<span class="st">&quot;.tsv$&quot;</span>, <span class="st">&quot;.viz.html&quot;</span>, input.file))
+<p><em>Option 1:</em> copy the template into each of the ten directories, and render them there.</p>
+<div class="fragment">
+<p><em>Option 2:</em> use my <code>templater</code> package.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(devtools)
+<span class="kw">install_github</span>(<span class="st">&quot;petrelharp/templater&quot;</span>)
+<span class="kw">library</span>(templater)
+dir.names &lt;-<span class="st"> </span><span class="kw">file.path</span>(<span class="st">&quot;examples/thedata&quot;</span>, LETTERS[<span class="dv">1</span>:<span class="dv">10</span>])
+for (input.dir in dir.names) {
+    output.file &lt;-<span class="st"> </span><span class="kw">file.path</span>(input.dir, <span class="st">&quot;visualization.html&quot;</span>)
     <span class="kw">render_template</span>(<span class="st">&quot;examples/simple-template.Rmd&quot;</span>, <span class="dt">output=</span>output.file, 
                     <span class="dt">change.rootdir=</span><span class="ot">TRUE</span>, <span class="dt">quiet=</span><span class="ot">TRUE</span>)
 }</code></pre></div>
+</div>
 </section><section class="slide level2">
 
 <p><strong>Look at them:</strong></p>
 <pre class="Rmd"><code> ```{r make_links, results=&quot;asis&quot;}
- output.files &lt;- file.path(&quot;examples/thedata&quot;,gsub(&quot;.tsv$&quot;,&quot;.viz.html&quot;,file.names))
- links &lt;- paste(&quot;[&quot;,file.names,&quot;](&quot;,output.files,&quot;)&quot;,sep=&#39;&#39;)
+ output.files &lt;- file.path(&quot;examples/thedata&quot;, LETTERS[1:10], &quot;visualization.html&quot;)
+ links &lt;- paste(&quot;[&quot;,dir.names,&quot;](&quot;,output.files,&quot;)&quot;,sep=&#39;&#39;)
  cat( paste(&quot;- &quot;, links, &quot;\n&quot;), &quot;\n&quot; )
  ```</code></pre>
 <ul>
-<li><a href="examples/thedata/A-data.viz.html">A-data.tsv</a></li>
-<li><a href="examples/thedata/B-data.viz.html">B-data.tsv</a></li>
-<li><a href="examples/thedata/C-data.viz.html">C-data.tsv</a></li>
-<li><a href="examples/thedata/D-data.viz.html">D-data.tsv</a></li>
-<li><a href="examples/thedata/E-data.viz.html">E-data.tsv</a></li>
-<li><a href="examples/thedata/F-data.viz.html">F-data.tsv</a></li>
-<li><a href="examples/thedata/G-data.viz.html">G-data.tsv</a></li>
-<li><a href="examples/thedata/H-data.viz.html">H-data.tsv</a></li>
-<li><a href="examples/thedata/I-data.viz.html">I-data.tsv</a></li>
-<li><a href="examples/thedata/J-data.viz.html">J-data.tsv</a></li>
+<li><a href="examples/thedata/A/visualization.html">examples/thedata/A</a></li>
+<li><a href="examples/thedata/B/visualization.html">examples/thedata/B</a></li>
+<li><a href="examples/thedata/C/visualization.html">examples/thedata/C</a></li>
+<li><a href="examples/thedata/D/visualization.html">examples/thedata/D</a></li>
+<li><a href="examples/thedata/E/visualization.html">examples/thedata/E</a></li>
+<li><a href="examples/thedata/F/visualization.html">examples/thedata/F</a></li>
+<li><a href="examples/thedata/G/visualization.html">examples/thedata/G</a></li>
+<li><a href="examples/thedata/H/visualization.html">examples/thedata/H</a></li>
+<li><a href="examples/thedata/I/visualization.html">examples/thedata/I</a></li>
+<li><a href="examples/thedata/J/visualization.html">examples/thedata/J</a></li>
 </ul>
 </section><section id="another-exercise" class="slide level2">
 <h1>Another exercise</h1>
